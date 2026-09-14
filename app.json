@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Bobby Media",
+    "slug": "bobby-media",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "bobbymedia",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A0F0A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bobbymedia.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Bobby Media needs camera access to upload event photos.",
+        "NSPhotoLibraryUsageDescription": "Bobby Media needs photo library access to upload and save photos.",
+        "NSPhotoLibraryAddUsageDescription": "Bobby Media needs permission to save photos to your library."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A0F0A"
+      },
+      "package": "com.bobbymedia.app",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#D4AF37",
+          "sounds": []
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Bobby Media needs camera access to upload event photos."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Bobby Media needs access to your photos to upload event media."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
