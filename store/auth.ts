@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../utils/storage';
 import { authApi } from '../api';
 
 interface User {
@@ -30,10 +30,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: true,
   isAuthenticated: false,
 
-  // ── Load token from SecureStore on app start ───────────────
+  // ── Load token from storage on app start ───────────────────
   loadFromStorage: async () => {
     try {
-      const token = await SecureStore.getItemAsync('access_token');
+      const token = await storage.getItem('access_token');
       if (token) {
         const { data } = await authApi.me();
         set({ user: data.data, token, isAuthenticated: true, isLoading: false });
@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ isLoading: false });
       }
     } catch {
-      await SecureStore.deleteItemAsync('access_token');
+      await storage.removeItem('access_token');
       set({ isLoading: false });
     }
   },
@@ -50,16 +50,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     const { data } = await authApi.login({ email, password });
     const { access_token, refresh_token, user } = data.data;
-    await SecureStore.setItemAsync('access_token', access_token);
-    if (refresh_token) await SecureStore.setItemAsync('refresh_token', refresh_token);
+    await storage.setItem('access_token', access_token);
+    if (refresh_token) await storage.setItem('refresh_token', refresh_token);
     set({ user, token: access_token, isAuthenticated: true });
   },
 
   // ── Logout ─────────────────────────────────────────────────
   logout: async () => {
     try { await authApi.logout(); } catch { /* ignore */ }
-    await SecureStore.deleteItemAsync('access_token');
-    await SecureStore.deleteItemAsync('refresh_token');
+    await storage.removeItem('access_token');
+    await storage.removeItem('refresh_token');
     set({ user: null, token: null, isAuthenticated: false });
   },
 

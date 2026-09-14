@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Dimensions, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Dimensions, Alert, Platform } from 'react-native';
 import { Image } from 'expo-image';
-import * as MediaLibrary from 'expo-media-library';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { galleryApi } from '../../api';
@@ -25,12 +24,29 @@ export default function CustomerGallery() {
   useEffect(() => { fetchGallery(); }, []);
 
   const downloadImage = async (url: string) => {
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission Needed', 'Please allow media library access to save photos.');
+    if (Platform.OS === 'web') {
+      try {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = url.split('/').pop() || 'photo.jpg';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch {
+        window.open(url, '_blank');
+      }
       return;
     }
+
+    // Native (iOS / Android)
     try {
+      const MediaLibrary = await import('expo-media-library');
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Needed', 'Please allow media library access to save photos.');
+        return;
+      }
       const { FileSystem } = await import('expo-file-system');
       const filename = url.split('/').pop() || 'photo.jpg';
       const fileUri = FileSystem.documentDirectory + filename;
