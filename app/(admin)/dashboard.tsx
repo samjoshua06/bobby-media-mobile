@@ -98,7 +98,7 @@ export default function AdminDashboard() {
               </View>
               <View>
                 <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 11 }}>Success Rate</Text>
-                <Text style={{ color: '#10B981', fontWeight: '800', fontSize: 16' }}>{p?.success_rate || 0}%</Text>
+                <Text style={{ color: '#10B981', fontWeight: '800', fontSize: 16 }}>{p?.success_rate || 0}%</Text>
               </View>
               <View>
                 <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 11 }}>Transactions</Text>
