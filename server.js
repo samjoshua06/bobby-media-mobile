@@ -1,9 +1,21 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const PORT = process.env.PORT || 10000;
 const DIST_DIR = path.join(__dirname, 'dist');
+
+// Auto-build if dist folder is missing
+if (!fs.existsSync(DIST_DIR) || !fs.existsSync(path.join(DIST_DIR, 'index.html'))) {
+  console.log('dist directory not found. Building web bundle...');
+  try {
+    execSync('npx expo export --platform web', { stdio: 'inherit' });
+    console.log('Build completed successfully.');
+  } catch (e) {
+    console.error('Failed to build web export:', e);
+  }
+}
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=UTF-8',
